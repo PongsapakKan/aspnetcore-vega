@@ -15,6 +15,8 @@ namespace vega.Controllers.Resources
 
         [Required]
         public bool IsRegistered { get; set; }
+
+        [Required]
         public ContactResource Contact { get; set; }
         public ICollection<int> Features { get; set; }
 
