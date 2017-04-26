@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,13 @@ namespace vega.Controllers
             this.context = context;
             this.mapper = mapper;
 
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<VehicleResource>> GetVehicle()
+        {
+            var vehicle = await context.Vehicles.Include(v => v.Features).ToListAsync();
+            return mapper.Map<List<Vehicle>, List<VehicleResource>>(vehicle);
         }
 
         [HttpPost]
@@ -50,8 +58,7 @@ namespace vega.Controllers
 
             mapper.Map<VehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
-
-            context.Vehicles.Add(vehicle);
+            
             await context.SaveChangesAsync();
 
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
