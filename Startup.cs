@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using vega.Persistence;
+using vega.Core;
 
 namespace WebApplicationBasic
 {
