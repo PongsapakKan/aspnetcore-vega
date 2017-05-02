@@ -11,7 +11,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using vega.Persistence;
+using vega.Persistence.Repositories;
 using vega.Core;
+using vega.Core.IRepositories;
 
 namespace WebApplicationBasic
 {
@@ -33,6 +35,7 @@ namespace WebApplicationBasic
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IMakeRepository, MakeRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper();
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration["ConnectionString:Default"]));

@@ -2,18 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using vega.Core;
+using vega.Core.IRepositories;
 using vega.Core.Models;
 
-namespace vega.Persistence
+namespace vega.Persistence.Repositories
 {
-    public class VehicleRepository : IVehicleRepository
+    public class VehicleRepository : Repository<Vehicle>, IVehicleRepository
     {
-        private readonly VegaDbContext context;
-        public VehicleRepository(VegaDbContext context)
+        public VehicleRepository(VegaDbContext context) : base(context)
         {
-            this.context = context;
         }
+
         public async Task<List<Vehicle>> GetVehicles()
         {
             return await context.Vehicles
@@ -36,15 +35,5 @@ namespace vega.Persistence
                     .ThenInclude(m => m.Make)
                 .SingleOrDefaultAsync(v => v.Id == id);
         }
-
-        public void Add(Vehicle vehicle)
-        {
-            context.Vehicles.Add(vehicle);
-        }
-
-        public void Remove(Vehicle vehicle)
-        {
-            context.Remove(vehicle);
-        }       
     }
 }

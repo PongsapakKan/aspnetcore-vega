@@ -4,58 +4,72 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using vega.Controllers.Resources;
+using vega.Core;
 using vega.Core.Models;
-using vega.Persistence;
 
 namespace vega.Controllers
 {
     [Route("/api/makes")]
     public class MakesController : Controller
     {
-        private readonly VegaDbContext context;
         private readonly IMapper mapper;
-        public MakesController(VegaDbContext context, IMapper mapper)
+        private readonly IUnitOfWork unitOfWork;
+        public MakesController(IMapper mapper, IUnitOfWork unitOfWork)
         {
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            this.context = context;
         }
 
         [HttpGet]
         public async Task<IEnumerable<MakeResource>> GetMakes()
         {
-            var makes = await context.Makes.Include(m => m.Models).ToListAsync();
+            var makes = await unitOfWork.Makes.GetMakes();
             return mapper.Map<List<Make>, List<MakeResource>>(makes);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMake(int id)
+        {
+            var make = await unitOfWork.Makes.GetMake(id);
+            if (make == null)
+                return NotFound();
+
+            return Ok(mapper.Map<Make, MakeResource>(make));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateMake([FromBody] MakeResource makeResource)
         {
-             if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-             var make = mapper.Map<MakeResource, Make>(makeResource);
+            var make = mapper.Map<MakeResource, Make>(makeResource);
 
-             context.Makes.Add(make);
-             await context.SaveChangesAsync();
+            unitOfWork.Makes.Add(make);
+            await unitOfWork.CompleteAsync();
 
-             var result = mapper.Map<Make, MakeResource>(make);
-             return Ok(result);
+            make =  await unitOfWork.Makes.GetMake(make.Id);
+
+            var result = mapper.Map<Make, MakeResource>(make);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMake(int id, [FromBody] MakeResource makeResource)
         {
-             if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-             var make = await context.Makes.SingleOrDefaultAsync(m => m.Id == id);
+            var make = await unitOfWork.Makes.GetMake(id);
 
-             mapper.Map<MakeResource, Make>(makeResource, make);
-             
-             await context.SaveChangesAsync();
+            mapper.Map<MakeResource, Make>(makeResource, make);
+            await unitOfWork.CompleteAsync();
 
-             var result = mapper.Map<Make, MakeResource>(make);
-             return Ok(result);
+            make =  await unitOfWork.Makes.GetMake(id);
+
+            var result = mapper.Map<Make, MakeResource>(make);
+            return Ok(result);
         }
+
     }
 }
