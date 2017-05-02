@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using vega.Core;
@@ -12,6 +14,16 @@ namespace vega.Persistence
         {
             this.context = context;
         }
+        public async Task<List<Vehicle>> GetVehicles()
+        {
+            return await context.Vehicles
+                .Include(v => v.Features)
+                    .ThenInclude(vf => vf.Feature)
+                .Include(v => v.Model)
+                    .ThenInclude(m => m.Make)
+                .ToListAsync();
+        }
+
         public async Task<Vehicle> GetVehicle(int id, bool includeRelated = true)
         {
             if (!includeRelated)
@@ -33,6 +45,6 @@ namespace vega.Persistence
         public void Remove(Vehicle vehicle)
         {
             context.Remove(vehicle);
-        }
+        }       
     }
 }
