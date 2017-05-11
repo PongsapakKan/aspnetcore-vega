@@ -11,8 +11,8 @@ const routing = RouterModule.forRoot([
     { path: 'counter', component: CounterComponent },
     { path: 'fetch-data', component: FetchDataComponent },
     { path: 'vehicles', component: VehicleListComponent },
-    { path: 'vehicle/new', component: VehicleFormComponent },
-    { path: 'vehicle/:id', component: VehicleFormComponent },
+    { path: 'vehicles/new', component: VehicleFormComponent },
+    { path: 'vehicles/:id', component: VehicleFormComponent },
     { path: '**', redirectTo: 'home' }
 ]);
 

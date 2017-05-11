@@ -1,34 +1,47 @@
 <div>
   <h2>Vehicles</h2>
-  <div class="form-group">
-    <label for="make">Make</label>
-    <select id="make" class="form-control" [(ngModel)]="filter.makeId" name="makeId" (change)="onChangeMake()">
-      <option value=""></option>
-      <option *ngFor="let m of makes" value="{{m.id}}">{{ m.name }}</option>
-    </select>
-  </div>
+  <p>
+    <a [routerLink]="['/vehicles/new']" class="btn btn-primary">New Vehicle</a>
+  </p>  
+  <div class="well">
+    <div class="form-group">
+      <label for="make">Make</label>
+      <select id="make" class="form-control" [(ngModel)]="query.makeId" name="makeId" (change)="onFilterMakeChange()">
+        <option value=""></option>
+        <option *ngFor="let m of makes" value="{{ m.id }}">{{ m.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="model">Model</label>
+      <select id="model" class="form-control" [(ngModel)]="query.modelId" name="modelId" (change)="onFilterModelChange()">
+        <option value=""></option>
+        <option *ngFor="let m of models" value="{{ m.id }}">{{ m.name }}</option>
+      </select>
+    </div>
+    <button class="btn btn-default" (click)="resetFilter()">Reset</button>
+  </div>  
   <table class="table table-bordered">
     <thead>
       <tr>
         <th *ngFor="let c of columns">
           <div (click)="sortBy(c.key)">
-            <i *ngIf="c.isSortable && query.sortBy === c.key" 
-              class="glyphicon"
-              [class.glyphicon-arrow-up]="query.isSortAscending"
-              [class.glyphicon-arrow-down]="!query.isSortAscending">
-            </i>
             <span>{{ c.title }}</span>
+            <i *ngIf="c.isSortable && query.sortBy === c.key" 
+              class="fa"
+              [class.fa-sort-asc]="query.isSortAscending"
+              [class.fa-sort-desc]="!query.isSortAscending">
+            </i>            
           </div>
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let vehicle of showVehicles">
+      <tr *ngFor="let vehicle of vehicles">
         <td>{{ vehicle.id }}</td>
         <td>{{ vehicle.make.name }}</td>
         <td>{{ vehicle.model.name }}</td>
         <td>{{ vehicle.contact.name }}</td>
-        <td><a class="btn btn-link" [routerLink]="['/vehicle/', vehicle.id]">View</a></td>
+        <td><a class="btn btn-link" [routerLink]="['/vehicles/', vehicle.id]">View</a></td>
       </tr>
     </tbody>
   </table>

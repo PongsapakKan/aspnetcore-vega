@@ -27,13 +27,13 @@
                         <span class='glyphicon glyphicon-th-list'></span> Fetch data
                     </a>
                 </li>
-                <li [routerLinkActive]="['link-active']">
+                <li [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{exact: true}">
                     <a [routerLink]="['/vehicles']">
                         <span class='glyphicon glyphicon-list'></span> Vehicles
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/vehicle/new']">
+                    <a [routerLink]="['/vehicles/new']">
                         <span class='glyphicon glyphicon-plus'></span> New vehicle
                     </a>
                 </li>
