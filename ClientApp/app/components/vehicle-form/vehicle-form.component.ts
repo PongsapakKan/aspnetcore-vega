@@ -93,7 +93,6 @@ export class VehicleFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.vehicle);
     if (this.vehicle.id) {
       this.vehicleService.update(this.vehicle)
       .subscribe(x => {
@@ -107,9 +106,15 @@ export class VehicleFormComponent implements OnInit {
       });
     } else {
       this.vehicleService.create(this.vehicle)
-        .subscribe(
-          v => console.log(v)
-        );
+        .subscribe(v => {
+          this.toastyService.success({
+            title: 'Success',
+            msg: 'The vehicle was successfully update.',
+            theme: 'bootstrap',
+            showClose: true,
+            timeout: 3000
+          })
+        });
     }
   }
 

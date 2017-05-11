@@ -10,7 +10,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./vehicle-list.component.css']
 })
 export class VehicleListComponent implements OnInit {
-  query: any = {};
+  private readonly pageSize = 1;
+
+  query: any = {
+    pageSize: this.pageSize,
+    page: 1
+  };
+
   columns = [
     { title: 'Id'},
     { title: 'Make', key: 'make', isSortable: true},
@@ -21,7 +27,7 @@ export class VehicleListComponent implements OnInit {
   makes: any[];
   models: any[];
   // allVehicles: Vehicle[];
-  vehicles: Vehicle[];
+  queryResult: any = {};
   constructor(
     private vehicleService: VehicleService,
     private router: Router
@@ -37,9 +43,10 @@ export class VehicleListComponent implements OnInit {
   private populateVehicles() {
     this.vehicleService.getVehicles(this.query)
       .subscribe(res => {
+        console.log(res);
         // this.allVehicles = res;
-        this.vehicles = res;
-      });           
+        this.queryResult = res;
+      });
   }
 
   onFilterMakeChange() {
@@ -61,7 +68,10 @@ export class VehicleListComponent implements OnInit {
   }
 
   resetFilter() {
-    this.query = {};
+    this.query = {
+      pageSize: this.pageSize,
+      page: 1
+    };
     this.onFilterMakeChange();
   }
 
@@ -75,6 +85,11 @@ export class VehicleListComponent implements OnInit {
       this.query.sortBy = column;
       this.query.isSortAscending = true;
     }
+    this.populateVehicles();
+  }
+
+  onPageClick(page) {
+    this.query.page = page;
     this.populateVehicles();
   }
 

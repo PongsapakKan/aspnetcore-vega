@@ -24,7 +24,7 @@ export class VehicleService {
       .map(res => res.json());
   }
 
-  create(vehicle: SaveVehicle) {
+  create(vehicle) {
     return this.http.post(this.vehicleEndpoint, vehicle)
       .map(res => res.json());
   }
@@ -45,6 +45,7 @@ export class VehicleService {
   }
 
   getVehicles(filter) {    
+    console.log(this.vehicleEndpoint + '?' + this.toQueryString(filter));
     return this.http.get(this.vehicleEndpoint + '?' + this.toQueryString(filter))
       .map(res => res.json());
   }

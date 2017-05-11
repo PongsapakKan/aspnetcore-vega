@@ -16,8 +16,9 @@ namespace vega.Persistence.Repositories
         {
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehicles(VehicleQuery queryObj)
+        public async Task<QueryResult<Vehicle>> GetVehicles(VehicleQuery queryObj)
         {
+            var result = new QueryResult<Vehicle>();
             var query = context.Vehicles
                 .Include(v => v.Features)
                     .ThenInclude(vf => vf.Feature)
@@ -39,9 +40,14 @@ namespace vega.Persistence.Repositories
             };
 
             query = query.ApplyOrdering(queryObj, columnsMap);
+
+            result.TotalItems = await query.CountAsync();           
+
             query = query.ApplyPaging(queryObj);
-           
-            return await query.ToListAsync();
+            
+            result.Items = await query.ToListAsync();
+
+            return result;
         }        
 
         public async Task<Vehicle> GetVehicle(int id, bool includeRelated = true)

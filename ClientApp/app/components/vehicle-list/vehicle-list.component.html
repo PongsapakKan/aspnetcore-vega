@@ -36,13 +36,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let vehicle of vehicles">
-        <td>{{ vehicle.id }}</td>
-        <td>{{ vehicle.make.name }}</td>
-        <td>{{ vehicle.model.name }}</td>
-        <td>{{ vehicle.contact.name }}</td>
-        <td><a class="btn btn-link" [routerLink]="['/vehicles/', vehicle.id]">View</a></td>
+      <tr *ngFor="let item of queryResult.items">
+        <td>{{ item.id }}</td>
+        <td>{{ item.make.name }}</td>
+        <td>{{ item.model.name }}</td>
+        <td>{{ item.contact.name }}</td>
+        <td><a class="btn btn-link" [routerLink]="['/vehicles/', item.id]">View</a></td>
       </tr>
     </tbody>
   </table>
+  <app-pagination [total-items]="queryResult.totalItems" [page-size]="pageSize" (page-change)="onPageClick($event)"></app-pagination>
 </div>
