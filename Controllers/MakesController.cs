@@ -27,6 +27,15 @@ namespace vega.Controllers
             return mapper.Map<List<Make>, List<MakeResource>>(makes);
         }
 
+        [HttpGet("query")]
+        public async Task<IActionResult> GetQueryMakes(MakeQueryResource makrQueryResource)
+        {
+            var makeQuery = mapper.Map<MakeQueryResource, MakeQuery>(makrQueryResource);
+            var makes = await unitOfWork.Makes.GetMakesContainId(makeQuery);
+            
+            return Ok(mapper.Map<List<Make>, List<MakeResource>>(makes));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMake(int id)
         {

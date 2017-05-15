@@ -60,10 +60,12 @@ export class VehicleListComponent implements OnInit {
     // this.vehicles = vehicles;
     let selectedMake = this.makes.find(m => m.id == this.query.makeId);
     this.models = selectedMake ? selectedMake.models : [];
+    this.query.page = 1;
     this.populateVehicles();
   }
 
   onFilterModelChange() {
+    this.query.page = 1;
     this.populateVehicles();
   }
 

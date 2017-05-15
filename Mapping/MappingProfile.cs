@@ -26,6 +26,7 @@ namespace vega.Mapping
 
             // API Resource to Domain
             CreateMap<VehicleQueryResource, VehicleQuery>();
+            CreateMap<MakeQueryResource, MakeQuery>();            
             CreateMap<MakeResource, Make>()
                 .ForMember(m => m.Id, opt => opt.Ignore());
             CreateMap<SaveVehicleResource, Vehicle>()
