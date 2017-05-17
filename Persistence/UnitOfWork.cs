@@ -15,11 +15,13 @@ namespace vega.Persistence
             Makes = new MakeRepository(this.context);            
             Models = new ModelRepository(this.context);
             Vehicles = new VehicleRepository(this.context);
+            Photos = new PhotoRepository(this.context);
         }
 
         public IModelRepository Models { get; private set; }
         public IVehicleRepository Vehicles { get; private set; }
         public IMakeRepository Makes { get; private set; }
+        public IPhotoRepository Photos { get; private set; }
 
         public async Task CompleteAsync()
         {

@@ -36,8 +36,9 @@ export class VehicleFormComponent implements OnInit {
     private router: Router,
     private vehicleService: VehicleService,
     private toastyService: ToastyService) { 
+
     route.params.subscribe(p => {
-      this.vehicle.id = +p['id'];
+      this.vehicle.id = +p['id'] || 0;
     });
   }
 
@@ -93,29 +94,19 @@ export class VehicleFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.vehicle.id) {
-      this.vehicleService.update(this.vehicle)
-      .subscribe(x => {
-        this.toastyService.success({
-          title: 'Success',
-          msg: 'The vehicle was successfully update.',
-          theme: 'bootstrap',
-          showClose: true,
-          timeout: 3000
-        })
+    var result$ = (this.vehicle.id) ? 
+      this.vehicleService.update(this.vehicle) 
+      : this.vehicleService.create(this.vehicle);
+
+    result$.subscribe(vehicle => {
+      this.toastyService.success({
+        title: 'Success',
+        msg: 'The vehicle was successfully update.',
+        theme: 'bootstrap',
+        showClose: true,
+        timeout: 3000
       });
-    } else {
-      this.vehicleService.create(this.vehicle)
-        .subscribe(v => {
-          this.toastyService.success({
-            title: 'Success',
-            msg: 'The vehicle was successfully update.',
-            theme: 'bootstrap',
-            showClose: true,
-            timeout: 3000
-          })
-        });
-    }
+    });
   }
 
   onDelete() {

@@ -1,3 +1,5 @@
+import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
+import { BrowserXhr } from '@angular/http';
 import { AppErrorHandler } from './app.error-handler';
 import { ErrorHandler } from '@angular/core';
 import { FormsModule } from "@angular/forms";
@@ -17,6 +19,8 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
 import routing from './app.routing';
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list.component';
 import { PaginationComponent } from './components/shared/pagination/pagination.component';
+import { ViewVehicleComponent } from './components/view-vehicle/view-vehicle.component';
+import { PhotoService } from "./services/photo.service";
 
 @NgModule({
     bootstrap: [ AppComponent ],
@@ -28,7 +32,8 @@ import { PaginationComponent } from './components/shared/pagination/pagination.c
         HomeComponent,
         VehicleFormComponent,
         VehicleListComponent,
-        PaginationComponent
+        PaginationComponent,
+        ViewVehicleComponent
     ],
     imports: [
         FormsModule,
@@ -38,7 +43,10 @@ import { PaginationComponent } from './components/shared/pagination/pagination.c
     ],
     providers: [
         { provide: ErrorHandler, useClass: AppErrorHandler },
-        VehicleService
+        { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+        VehicleService,
+        PhotoService,
+        ProgressService
     ]
 })
 export class AppModule {

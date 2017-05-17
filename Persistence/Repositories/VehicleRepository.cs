@@ -48,7 +48,7 @@ namespace vega.Persistence.Repositories
             result.Items = await query.ToListAsync();
 
             return result;
-        }        
+        }
 
         public async Task<Vehicle> GetVehicle(int id, bool includeRelated = true)
         {

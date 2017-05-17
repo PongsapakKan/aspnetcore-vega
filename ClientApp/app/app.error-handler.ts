@@ -16,6 +16,7 @@ export class AppErrorHandler implements ErrorHandler {
                 timeout: 3000
             });
         });
+
     }
 
 }
