@@ -33,11 +33,22 @@ export class ViewVehicleComponent implements OnInit {
         return;
       }
     });
-    }
+  }
 
   ngOnInit() {  
     this.photoService.getPhotos(this.vehicleId)
-      .subscribe(photos => this.photos = photos);
+      .subscribe(photos => {
+        this.photos = photos
+      },
+      err => {
+        this.toasty.error({
+          title: 'Error',
+          msg: err.text(),
+          theme: 'bootstrap',
+          showClose: true,
+          timeout: 3000
+        });
+      });
 
     this.vehicleService.getVehicle(this.vehicleId)
       .subscribe(
@@ -66,6 +77,7 @@ export class ViewVehicleComponent implements OnInit {
     this.progressSerivce.startTracking()
       .subscribe(progress => {
         this.zone.run(() => {
+          console.log(progress);
           this.progress = progress;
         });
       },
