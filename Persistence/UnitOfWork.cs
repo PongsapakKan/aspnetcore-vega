@@ -11,17 +11,11 @@ namespace vega.Persistence
         private readonly VegaDbContext context;
         public UnitOfWork(VegaDbContext context)
         {
-            this.context = context;
-            Makes = new MakeRepository(this.context);            
+            this.context = context;    
             Models = new ModelRepository(this.context);
-            Vehicles = new VehicleRepository(this.context);
-            Photos = new PhotoRepository(this.context);
         }
 
         public IModelRepository Models { get; private set; }
-        public IVehicleRepository Vehicles { get; private set; }
-        public IMakeRepository Makes { get; private set; }
-        public IPhotoRepository Photos { get; private set; }
 
         public async Task CompleteAsync()
         {

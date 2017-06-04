@@ -8,11 +8,13 @@ using vega.Core.Models;
 
 namespace vega.Persistence.Repositories
 {
-    public class PhotoRepository : Repository<Photo>, IPhotoRepository 
+    public class PhotoRepository : IPhotoRepository
     {
-        public PhotoRepository(VegaDbContext context) : base(context)
+        private readonly VegaDbContext context;
+        public PhotoRepository(VegaDbContext context)
         {
-            
+            this.context = context;
+
         }
         public async Task<IEnumerable<Photo>> GetPhotos(int vehicleId)
         {

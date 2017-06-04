@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using vega.Controllers.Resources;
 using vega.Core;
+using vega.Core.IRepositories;
 using vega.Core.Models;
 
 namespace vega.Controllers
@@ -14,8 +15,10 @@ namespace vega.Controllers
     {
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
-        public MakesController(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly IMakeRepository repository;
+        public MakesController(IMapper mapper, IMakeRepository repository, IUnitOfWork unitOfWork)
         {
+            this.repository = repository;
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
@@ -23,7 +26,7 @@ namespace vega.Controllers
         [HttpGet]
         public async Task<IEnumerable<MakeResource>> GetMakes()
         {
-            var makes = await unitOfWork.Makes.GetMakes();
+            var makes = await repository.GetMakes();
             return mapper.Map<List<Make>, List<MakeResource>>(makes);
         }
 
@@ -31,15 +34,15 @@ namespace vega.Controllers
         public async Task<IActionResult> GetQueryMakes(MakeQueryResource makrQueryResource)
         {
             var makeQuery = mapper.Map<MakeQueryResource, MakeQuery>(makrQueryResource);
-            var makes = await unitOfWork.Makes.GetMakesContainId(makeQuery);
-            
+            var makes = await repository.GetMakesContainId(makeQuery);
+
             return Ok(mapper.Map<List<Make>, List<MakeResource>>(makes));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMake(int id)
         {
-            var make = await unitOfWork.Makes.GetMake(id);
+            var make = await repository.GetMake(id);
             if (make == null)
                 return NotFound();
 
@@ -54,10 +57,10 @@ namespace vega.Controllers
 
             var make = mapper.Map<MakeResource, Make>(makeResource);
 
-            unitOfWork.Makes.Add(make);
+            repository.Add(make);
             await unitOfWork.CompleteAsync();
 
-            make =  await unitOfWork.Makes.GetMake(make.Id);
+            make = await repository.GetMake(make.Id);
 
             var result = mapper.Map<Make, MakeResource>(make);
             return Ok(result);
@@ -69,12 +72,12 @@ namespace vega.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var make = await unitOfWork.Makes.GetMake(id);
+            var make = await repository.GetMake(id);
 
             mapper.Map<MakeResource, Make>(makeResource, make);
             await unitOfWork.CompleteAsync();
 
-            make =  await unitOfWork.Makes.GetMake(id);
+            make = await repository.GetMake(id);
 
             var result = mapper.Map<Make, MakeResource>(make);
             return Ok(result);

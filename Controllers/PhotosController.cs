@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using vega.Controllers.Resources;
 using vega.Core;
+using vega.Core.IRepositories;
 using vega.Core.Models;
 
 namespace vega.Controllers
@@ -21,8 +22,17 @@ namespace vega.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         private readonly PhotoSettings photoSettings;
-        public PhotosController(IHostingEnvironment host, IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PhotoSettings> options)
+        private readonly IPhotoRepository photoRepository;
+        private readonly IVehicleRepository vehicleRepository;
+        public PhotosController(IHostingEnvironment host, 
+            IVehicleRepository vehicleRepository,
+            IPhotoRepository photoRepository, 
+            IUnitOfWork unitOfWork, 
+            IMapper mapper, 
+            IOptionsSnapshot<PhotoSettings> options)
         {
+            this.vehicleRepository = vehicleRepository;
+            this.photoRepository = photoRepository;
             this.photoSettings = options.Value;
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
@@ -32,15 +42,15 @@ namespace vega.Controllers
         [HttpGet]
         public async Task<IEnumerable<PhotoResource>> GetPhoto(int vehicleId)
         {
-            var photos = await unitOfWork.Photos.GetPhotos(vehicleId);
-            
+            var photos = await photoRepository.GetPhotos(vehicleId);
+
             return mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos);
         }
 
         [HttpPost]
         public async Task<IActionResult> Upload(int vehicleId, IFormFile file)
         {
-            var vehicle = await unitOfWork.Vehicles.GetVehicle(vehicleId, includeRelated: false);
+            var vehicle = await vehicleRepository.GetVehicle(vehicleId, includeRelated: false);
             if (vehicle == null)
                 return NotFound();
 
@@ -60,7 +70,7 @@ namespace vega.Controllers
             var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads");
             if (!Directory.Exists(uploadsFolderPath))
                 Directory.CreateDirectory(uploadsFolderPath);
-            
+
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var filePath = Path.Combine(uploadsFolderPath, fileName);
 

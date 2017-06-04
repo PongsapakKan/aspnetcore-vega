@@ -10,6 +10,7 @@ namespace vega.Persistence.Repositories
 {
     public class MakeRepository : Repository<Make>, IMakeRepository
     {
+
         public MakeRepository(VegaDbContext context) : base(context)
         {
         }

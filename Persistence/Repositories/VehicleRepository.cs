@@ -10,10 +10,12 @@ using vega.Extensions;
 
 namespace vega.Persistence.Repositories
 {
-    public class VehicleRepository : Repository<Vehicle>, IVehicleRepository
+    public class VehicleRepository : IVehicleRepository
     {
-        public VehicleRepository(VegaDbContext context) : base(context)
+        private readonly VegaDbContext context;
+        public VehicleRepository(VegaDbContext context)
         {
+            this.context = context;
         }
 
         public async Task<QueryResult<Vehicle>> GetVehicles(VehicleQuery queryObj)
@@ -25,7 +27,7 @@ namespace vega.Persistence.Repositories
                 .Include(v => v.Model)
                     .ThenInclude(m => m.Make)
                 .AsQueryable();
-            
+
             if (queryObj.MakeId.HasValue)
                 query = query.Where(v => v.Model.MakeId == queryObj.MakeId.Value);
 
@@ -41,10 +43,10 @@ namespace vega.Persistence.Repositories
 
             query = query.ApplyOrdering(queryObj, columnsMap);
 
-            result.TotalItems = await query.CountAsync();           
+            result.TotalItems = await query.CountAsync();
 
             query = query.ApplyPaging(queryObj);
-            
+
             result.Items = await query.ToListAsync();
 
             return result;
@@ -61,6 +63,16 @@ namespace vega.Persistence.Repositories
                 .Include(v => v.Model)
                     .ThenInclude(m => m.Make)
                 .SingleOrDefaultAsync(v => v.Id == id);
+        }
+
+        public void Add(Vehicle vehicle)
+        {
+            context.Vehicles.Add(vehicle);
+        }
+        
+        public void Remove(Vehicle vehicle)
+        {
+            context.Remove(vehicle);
         }
     }
 }
