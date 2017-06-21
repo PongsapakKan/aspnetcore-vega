@@ -7,10 +7,12 @@ using vega.Core.Models;
 
 namespace vega.Persistence.Repositories
 {
-    public class ModelRepository : Repository<Model>, IModelRepository
+    public class ModelRepository : IModelRepository
     {
-        public ModelRepository(VegaDbContext context) : base(context)
+        private readonly VegaDbContext context;
+        public ModelRepository(VegaDbContext context)
         {
+            this.context = context;
         }
 
         public async Task<Model> GetModel(int id)
@@ -21,6 +23,16 @@ namespace vega.Persistence.Repositories
         public async Task<List<Model>> GetModels()
         {
             return await context.Models.ToListAsync();
+        }
+
+        public void Add(Model model)
+        {
+            context.Models.Add(model);
+        }
+
+        public void Remove(Model model)
+        {
+            context.Remove(model);
         }
     }
 }

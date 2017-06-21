@@ -35,6 +35,11 @@ namespace WebApplicationBasic
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:4200"));
+            });
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
             services.AddScoped<IModelRepository, ModelRepository>();
             services.AddScoped<IMakeRepository, MakeRepository>();
@@ -54,6 +59,8 @@ namespace WebApplicationBasic
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            // app.UseCors("AllowSpecificOrigin");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,6 +74,13 @@ namespace WebApplicationBasic
             }
 
             app.UseStaticFiles();
+
+            // var options = new JwtBearerOptions
+            // {
+            //     Audience = "https://api.pepper.com",
+            //     Authority = "https://pepperonis.auth0.com/"
+            // };
+            // app.UseJwtBearerAuthentication(options);
 
             app.UseMvc(routes =>
             {

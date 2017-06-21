@@ -8,11 +8,13 @@ using vega.Core.Models;
 
 namespace vega.Persistence.Repositories
 {
-    public class MakeRepository : Repository<Make>, IMakeRepository
+    public class MakeRepository : IMakeRepository
     {
+        private readonly VegaDbContext context;
 
-        public MakeRepository(VegaDbContext context) : base(context)
+        public MakeRepository(VegaDbContext context)
         {
+            this.context = context;
         }
 
         public async Task<Make> GetMake(int id, bool includeRelated = true)
@@ -42,6 +44,16 @@ namespace vega.Persistence.Repositories
             return await context.Makes
                 .Include(m => m.Models)
                 .ToListAsync();
+        }
+
+        public void Add(Make make)
+        {
+            context.Makes.Add(make);
+        }
+
+        public void Remove(Make make)
+        {
+            context.Remove(make);
         }
     }
 }

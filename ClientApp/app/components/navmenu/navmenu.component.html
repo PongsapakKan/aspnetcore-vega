@@ -13,20 +13,25 @@
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
                 <li [routerLinkActive]="['link-active']">
+                    <a href="https://pepperonis.auth0.com/login?client=JgdPTZCQQf0Juwxy92Da9DCOdoK73ROY" *ngIf="!auth.authenticated()">
+                        <span class='glyphicon glyphicon-user'></span> Login
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a (click)="auth.logout()" *ngIf="auth.authenticated()">
+                        <span class='glyphicon glyphicon-user'></span> Logout
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
                     <a [routerLink]="['/home']">
                         <span class='glyphicon glyphicon-home'></span> Home
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/counter']">
-                        <span class='glyphicon glyphicon-education'></span> Counter
+                    <a [routerLink]="['/admin']" *ngIf="auth.isInRole('Admin')">
+                        <span class='glyphicon glyphicon-education'></span> Admin
                     </a>
-                </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/fetch-data']">
-                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
-                    </a>
-                </li>
+                </li>               
                 <li [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{exact: true}">
                     <a [routerLink]="['/vehicles']">
                         <span class='glyphicon glyphicon-list'></span> Vehicles

@@ -1,3 +1,5 @@
+import { AdminComponent } from './components/admin/admin.component';
+import { Auth } from './services/auth.service';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
 import { BrowserXhr } from '@angular/http';
 import { AppErrorHandler } from './app.error-handler';
@@ -33,7 +35,8 @@ import { PhotoService } from "./services/photo.service";
         VehicleFormComponent,
         VehicleListComponent,
         PaginationComponent,
-        ViewVehicleComponent
+        ViewVehicleComponent,
+        AdminComponent
     ],
     imports: [
         FormsModule,
@@ -44,6 +47,7 @@ import { PhotoService } from "./services/photo.service";
     providers: [
         { provide: ErrorHandler, useClass: AppErrorHandler },
         { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+        Auth,
         VehicleService,
         PhotoService,
         ProgressService

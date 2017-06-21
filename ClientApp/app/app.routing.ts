@@ -1,3 +1,4 @@
+import { AdminComponent } from './components/admin/admin.component';
 import { ViewVehicleComponent } from './components/view-vehicle/view-vehicle.component';
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list.component';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
@@ -11,6 +12,7 @@ const routing = RouterModule.forRoot([
     { path: 'home', component: HomeComponent },
     { path: 'counter', component: CounterComponent },
     { path: 'fetch-data', component: FetchDataComponent },
+    { path: 'admin', component: AdminComponent },
     { path: 'vehicles', component: VehicleListComponent },
     { path: 'vehicles/new', component: VehicleFormComponent },
     { path: 'vehicles/edit/:id', component: VehicleFormComponent },
